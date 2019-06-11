@@ -4,7 +4,9 @@ Emails (POP3, SMTP, IMAP) send/receive wrapper APIs using JavaMail
 
 # Configuration
 
-This module using the NYLA [Config](https://github.com/nyla-solutions/nyla/blob/master/src/main/java/nyla/solutions/core/util/Cryption.java) object. It supports setting the following properties from config.properties, or Java System Properties or Environment variables. 
+This module using the [NYLA](https://github.com/nyla-solutions/nyla) [Config](https://github.com/nyla-solutions/nyla/blob/master/src/main/java/nyla/solutions/core/util/Config.java) object. It supports setting the following properties from config.properties, or Java System Properties or Environment variables. 
+
+The passwords are encrypted using the [Cryption object](https://github.com/nyla-solutions/nyla/blob/master/src/main/java/nyla/solutions/core/util/Cryption.java)
 	
 	
 	#Mail Server
