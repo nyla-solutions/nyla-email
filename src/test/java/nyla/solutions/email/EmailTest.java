@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import nyla.solutions.core.util.Config;
 
-@Ignore
+//@Ignore
 public class EmailTest
 {
 
@@ -44,6 +44,7 @@ public class EmailTest
 		String messageBody = "<b>Hello World</b>";
 		
 		Email email = new Email();
+		email.setMailFromUser(Config.getProperty("junit.from.user"));
 		email.sendMail(to, subject, messageBody);
 	}
 
