@@ -3,6 +3,8 @@ Emails (POP3, SMTP, IMAP) send/receive wrapper APIs using JavaMail
 
 
 # Configuration
+
+This module using the NYLA [Config](https://github.com/nyla-solutions/nyla/blob/master/src/main/java/nyla/solutions/core/util/Cryption.java) object. It supports setting the following properties from config.properties, or Java System Properties or Environment variables. 
 	
 	
 	#Mail Server
@@ -15,7 +17,7 @@ Emails (POP3, SMTP, IMAP) send/receive wrapper APIs using JavaMail
 	mail.from=imani@home.org
 	
 	
-	#Mail User password (see https://github.com/nyla-solutions/nyla/blob/master/src/main/java/nyla/solutions/core/util/Cryption.java)
+	#Mail User password using Nyla Cryption
 	mail.from.password={cryption}HMlC6NiiCErfg3KTYXjktA==
 	
 	# Mail SMTP port
