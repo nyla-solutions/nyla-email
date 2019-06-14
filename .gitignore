@@ -4,6 +4,7 @@
 .classpath
 .project
 .settings/
+config.properties
 bin/
 
 # Ignore Gradle GUI config

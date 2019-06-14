@@ -154,7 +154,7 @@ mail.smtp.ssl.enable=true
  * @version 1.0
  *          
  */
-public class Email implements EmailTags, Disposable, SendMail, Connectable
+public class Email implements  Disposable, SendMail, Connectable
 {	
 
 	/**
@@ -248,12 +248,12 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 	throws javax.mail.MessagingException, IOException, Exception
 	{
 
-		String toMail = (String) aMap.get(TO);
+		String toMail = (String) aMap.get(EmailTags.TO);
 
 		if(toMail == null || toMail.length() == 0)
 			toMail = this.toMail;
 
-		String templateName = (String) aMap.get(TEMPLATE_NAME);
+		String templateName = (String) aMap.get(EmailTags.TEMPLATE_NAME);
 
 		this.sendMail(toMail, templateName, aMap, Locale.getDefault());
 
@@ -270,7 +270,7 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 			String messageBody)
 	{
 		if(this.mailFromUser == null || this.mailFromUser.length() == 0)
-					throw new IllegalArgumentException("Config property "+MAIL_FROM_ADDRESS_PROP+" or setting property mailFromUser is required");
+					throw new IllegalArgumentException("Config property "+EmailTags.MAIL_FROM_ADDRESS_PROP+" or setting property mailFromUser is required");
 
 		sendMail(to, this.mailFromUser,
 				subject, messageBody);
@@ -475,27 +475,22 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 	 * @return Array of E-mail addresses.
 	 */
 
-	private InternetAddress[] getAllEmailAddress(String aToEmailAddress)
-
+	private InternetAddress[] getAllEmailAddress(String toEmailAdddress)
 	throws AddressException
-
 	{
 
-		if (aToEmailAddress == null)
+		if (toEmailAdddress == null)
 
 			throw new IllegalArgumentException(
 					"aToEmailAddress required in Email");
 
-		StringTokenizer tokens = new StringTokenizer(aToEmailAddress,
-				EMAIL_DELIMITER_IND);
+		StringTokenizer tokens = new StringTokenizer(toEmailAdddress,
+				EmailTags.EMAIL_DELIMITER_IND);
 
 		if (tokens.countTokens() <= 0)
-
 		{
-
 			throw (new IllegalArgumentException(
 					"No TO E-mail addresses passed in."));
-
 		}
 
 		InternetAddress[] emailAddresses = new InternetAddress[tokens
@@ -504,15 +499,11 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 		int i = 0;
 
 		while (tokens.hasMoreTokens())
-
 		{
-
 			emailAddresses[i] = new InternetAddress(tokens.nextToken());
-
 			i++;
-
 		}
-
+		
 		return (emailAddresses);
 
 	}// --------------------------------------------
@@ -531,15 +522,11 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 	 */
 	public void sendMail(String to, String aFrom, String aSubject,
 			String aTemplateNM, Map<Object, Object> aMap, Locale aLocale)
-
 	throws javax.mail.MessagingException, IOException, Exception
-
 	{
 
-		aMap.put(TO, to);
-
+		aMap.put(EmailTags.TO, to);
 		aMap.put(EmailTags.FROM_EMAIL, aFrom);
-
 		aMap.put(EmailTags.SUBJECT, aSubject);
 
 		sendMail(to, aTemplateNM, aMap, aLocale);
@@ -558,27 +545,23 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 	 */
 	public void sendMail(String to, String templateName,
 			Map<Object, Object> map, Locale locale)
-
 	throws javax.mail.MessagingException, IOException, Exception
 	{
 
 		logger.debug("sendMail");
 		
-		
-		
 		this.connect();
 
-		Object o = map.get(SUBJECT);
+		Object o = map.get(EmailTags.SUBJECT);
 
 		// process Subject
 
 		String SubjectStr = "System Contact.";
 
 		if (o != null && !Data.isNull(o.toString()))
-
 			SubjectStr = o.toString();
 
-		o = map.get(CATEGORY);
+		o = map.get(EmailTags.CATEGORY);
 
 		// process Subject Category
 
@@ -589,11 +572,11 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 		MimeMessage mailMessage = new MimeMessage(mailSession);
 
 		if(this.mailFromUser == null || this.mailFromUser.length() == 0)
-			throw new RequiredException("Config property "+Email.MAIL_FROM_ADDRESS_PROP);
+			throw new RequiredException("Config property "+EmailTags.MAIL_FROM_ADDRESS_PROP);
 		
 		mailMessage.setFrom(new InternetAddress(this.mailFromUser,
 
-		(String) map.get(Email.FROM_NAME)));
+		(String) map.get(EmailTags.FROM_NAME)));
 
 		// GET message body from template
 
@@ -612,7 +595,7 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 
 		// Process CC
 
-		o = map.get(CC);
+		o = map.get(EmailTags.CC);
 
 		String cc_string = null;
 
@@ -785,35 +768,15 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 				
 				
 				Properties mailProperties = new Properties();
-				for(Map.Entry<Object, Object> entry: systemProperties.entrySet())
-				{
-					mailProperties.setProperty(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
-				}
-				
-				//merge config properties
-				Map<Object,Object> configProperties = Config.getProperties();
-				if(configProperties != null  && !configProperties.isEmpty())
-				{
-					for (Map.Entry<Object, Object> entry : configProperties.entrySet())
-					{
-						mailProperties.setProperty(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
-					}
-					
-				}
+			
 				mailProperties.setProperty("mail.imap.host",imapHost);
-				
 				mailProperties.setProperty("mail.imap.port",imapPort);
-
 				mailProperties.setProperty("mail.smtp.ssl.enable",String.valueOf(smtpSslEnable));
 				mailProperties.setProperty("mail.smtp.host",mailHost);
-				mailProperties.setProperty("mail.host",mailHost);
-				//sysProperties.put("mail.smtp.host",
-				//		Config.getProperty(MAIL_SERVER_PROP, ""));
-				
+				mailProperties.setProperty("mail.host",mailHost);				
 				mailProperties.setProperty("mail.imap.auth.plain.disable", "false");
 				mailProperties.setProperty("mail.imap.auth.ntlm.disable", "false");
 				mailProperties.setProperty("mail.store.protocol", "imap");
-				
 				mailProperties.setProperty("mail.imap.starttls.enable","true");
 				mailProperties.setProperty("mail.imap.starttls.required","true");
 				mailProperties.setProperty("mail.imap.socketFactory.port","993");
@@ -825,38 +788,52 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 				mailProperties.setProperty("mail.imap.ssl.enable","true");
 				mailProperties.setProperty("mail.imap.auth.plain.disable","true");
 				mailProperties.setProperty("mail.imap.auth.mechanisms","LOGIN");
-
-				mailProperties.put(MAIL_AUTHENICATION_REQUIRED_PROP, this.authenicationRequired);
-				
+				mailProperties.put("mail.auth.required", this.authenicationRequired);
 				mailProperties.put("mail.smtp.port",this.mailPort);
-
 				mailProperties.put("mail.webdav.host",webdavHost);
 				mailProperties.put("mail.weddav.port",weddavPort);
-
-				// mail.debug
-
-				// SysProperties.put("mail.port",
-				// Config.getProperty("mail.port","25"));
-
-				mailProperties.put("mail.debug", "true");
+				mailProperties.put("mail.debug", Config.getProperty("MAIL_DEBUG","true"));
 				mailProperties.put("mail.from", this.mailFromUser);
 				mailProperties.put("mail.smtp.from",this.mailFromUser);
-
-				// mail.imap.sasl.authorizationid
-
+				mailProperties.put("mail.smtp.starttls.enable", 
+					Config.getProperty("MAIL_SMTP_STARTTLS_ENABLE","false"));
 				mailProperties.put("mail.imap.sasl.authorizationid",mailImapSaslAuth);
-
-				mailProperties.put("mail.smtp.auth",
-						authNeeded);
+				mailProperties.put("mail.smtp.auth",authNeeded);
+				
+				//Merge System Properties
+				String key = null;
+				for(Map.Entry<Object, Object> entry: systemProperties.entrySet())
+				{
+					key = String.valueOf(entry.getKey());
+					
+					if(key == null || !key.contains("mail."))
+						continue;
+					
+					mailProperties.setProperty(key, String.valueOf(entry.getValue()));
+				}
+				
+				//merge config properties
+				Map<Object,Object> configProperties = Config.getProperties();
+				if(configProperties != null  && !configProperties.isEmpty())
+				{
+					for (Map.Entry<Object, Object> entry : configProperties.entrySet())
+					{
+						key = String.valueOf(entry.getKey());
+						
+						if(key == null || !key.contains("mail."))
+							continue;
+						
+						mailProperties.setProperty(key, String.valueOf(entry.getValue()));
+					}
+					
+				}
 
 				mailSession = Session.getDefaultInstance(mailProperties,
 
 				new javax.mail.Authenticator()
 				{
-
 					protected PasswordAuthentication getPasswordAuthentication()
 					{
-
 						return new PasswordAuthentication(
 								getMailFromUser(),
 								Text.toString(getMailFromPassword()));
@@ -867,8 +844,6 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 				mailTransport = mailSession.getTransport(mailProtocol);
 
 				initStore();
-
-				
 				
 				Debugger.println(this, "properties=" + mailSession.getProperties());
 
@@ -877,18 +852,18 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 
 					String server = this.mailHost;
 					if(server == null || server.length() == 0)
-						throw new RequiredException("Config property "+Email.MAIL_SERVER_PROP);
+						throw new RequiredException("Config property "+EmailTags.MAIL_SERVER_PROP);
 				
 					
 					int port = mailPort;
 					String from = this.mailFromUser;
 					
 					if(this.mailFromUser == null || this.mailFromUser.length() == 0)
-						throw new RequiredException("Config property "+Email.MAIL_FROM_ADDRESS_PROP);
+						throw new RequiredException("Config property "+EmailTags.MAIL_FROM_ADDRESS_PROP);
 				
 					char[] password = this.getMailFromPassword();
 					if(password == null || password.length == 0)
-						throw new RequiredException(Email.MAIL_FROM_PASSWORD_PROP+" property");
+						throw new RequiredException(EmailTags.MAIL_FROM_PASSWORD_PROP+" property");
 					
 					mailTransport.connect(server, port, from, new String(password));
 
@@ -927,13 +902,9 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 		if (!isAuthenicationRequired())
 			return;
 		
-		
-		
 		String user = getMailFromUser();
 		if(user == null|| user.trim().length() == 0)
-					throw new SetupException("user is required. Set property:"+MAIL_FROM_ADDRESS_PROP);
-		
-		
+					throw new SetupException("user is required. Set property:"+EmailTags.MAIL_FROM_ADDRESS_PROP);
 		
 		char[] passwordArray = getMailFromPassword();
 		
@@ -1222,36 +1193,32 @@ public class Email implements EmailTags, Disposable, SendMail, Connectable
 	}
 
 
-	private String defaultSubject = Config.getProperty(Email.MAIL_SUBJECT_PROP,"");
-	private String mailFromUser = Config.getProperty(Email.MAIL_FROM_ADDRESS_PROP,"");
+	private String defaultSubject = Config.getProperty(EmailTags.MAIL_SUBJECT_PROP,"");
+	private String mailFromUser = Config.getProperty(EmailTags.MAIL_FROM_ADDRESS_PROP,"");
 	private char[] mailFromPassword = Config
 			.getPropertyPassword(EmailTags.MAIL_FROM_PASSWORD_PROP,"");
-	private boolean authenicationRequired = Config.getPropertyBoolean(MAIL_AUTHENICATION_REQUIRED_PROP,
+	private boolean authenicationRequired = Config.getPropertyBoolean(EmailTags.MAIL_AUTHENICATION_REQUIRED_PROP,
 			Boolean.FALSE).booleanValue();
-	private String mailHost = Config.getProperty(MAIL_SERVER_PROP,""); //required
+	private String mailHost = Config.getProperty(EmailTags.MAIL_SERVER_PROP,""); //required
 	private Session mailSession = null;
 	private Store store = null;
-	private String contentType = Config.getProperty(Email.class.getName()
-			+ ".contentType", "text/html");
+	private String contentType = Config.getProperty("MAIL_CONTENT_TYPE", "text/html");
 	private Transport mailTransport = null;
 	private Log logger = Debugger.getLog(getClass());
-	//private String defaultFrom = Config.getProperty(Email.MAIL_FROM_ADDRESS_PROP,"");	
-
-	private boolean useJNDI = Config.getPropertyBoolean(MAIL_SESSION_JNDI_USED, false)
+	private boolean useJNDI = Config.getPropertyBoolean(EmailTags.MAIL_SESSION_JNDI_USED, false)
 	.booleanValue();
 	private String toMail = Config.getProperty("mail.to","");
 	private String jndiName = Config.getProperty(EmailTags.MAIL_SESSION_JNDI_NAME,"");
-	private String readProtocol = Config.getProperty("mail.read.protocol", "");
-	private String imapHost = Config.getProperty("mail.imap.host", "");
-	private String imapPort = Config.getProperty("mail.imap.port", "143");
-	private boolean smtpSslEnable =  Config.getPropertyBoolean("mail.smtp.ssl.enable", true);
-	//private String smtpPort = Config.getProperty("mail.smtp.port", "25");
-	private String webdavHost = Config.getProperty("mail.webdav.host", "");
+	private String readProtocol = Config.getProperty("MAIL_READ_PROTOCOL", "");
+	private String imapHost = Config.getProperty("MAIL_IMAP_HOST", "");
+	private String imapPort = Config.getProperty("MAIL_IMAP_PORT", "143");
+	private boolean smtpSslEnable =  Config.getPropertyBoolean("MAIL_SMTP_SSL_ENABLE", true);
+	private String webdavHost = Config.getProperty("MAIL_WEBDAV_HOST", "");
 
-	private String weddavPort = Config.getProperty("mail.webdav.port", "143");
+	private String weddavPort = Config.getProperty("MAIL_WEBDAV_PORT", "143");
 	private String mailImapSaslAuth = Config.getProperty(EmailTags.MAIL_FROM_ADDRESS_PROP,this.mailFromUser);
-	private boolean authNeeded = Config.getPropertyBoolean("mail.smtp.auth", false);
-	private String mailProtocol = Config.getProperty("mail.protocol", "smtp");
-	private int mailPort = Config.getPropertyInteger("mail.port", 25).intValue();
+	private boolean authNeeded = Config.getPropertyBoolean("MAIL_AUTH_REQUIRED", false);
+	private String mailProtocol = Config.getProperty("MAIL_PROTOCOL", "smtp");
+	private int mailPort = Config.getPropertyInteger("MAIL_PORT", 25).intValue();
 	
 }

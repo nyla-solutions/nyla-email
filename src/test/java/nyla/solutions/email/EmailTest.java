@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import nyla.solutions.core.util.Config;
 
-@Ignore
+//@Ignore
 public class EmailTest
 {
 

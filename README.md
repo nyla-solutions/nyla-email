@@ -58,3 +58,17 @@ The passwords are encrypted using the [Cryption object](https://github.com/nyla-
 		{
 			System.out.println("message:"+message);
 		}
+
+		MAIL_FORM=husbands@nbccministries.org
+		
+
+## The Mail System Friendly Properties
+
+
+	MAIL_HOST=hostname
+	MAIL_FROM_PASSWORD={cryption}122321sadsdsd==
+	CRYPTION_KEY=SALT
+	MAIL_AUTH_REQUIRED=true
+	MAIL_PORT=25
+	MAIL_SMTP_SSL_ENABLE=false
+	MAIL_SMTP_STARTTLS_ENABLE=true

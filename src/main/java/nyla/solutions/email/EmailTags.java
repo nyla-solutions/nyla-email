@@ -3,50 +3,40 @@ package nyla.solutions.email;
 public interface EmailTags
 {
 
-   public static final String MAIL_SESSION_JNDI_USED = "mail.smtp.jndi.session.used";
+   public static final String MAIL_SESSION_JNDI_USED = "MAIL_SMTP_JNDI_SESSION_USED";
 
-   public static final String MAIL_SESSION_JNDI_NAME = "mail.smtp.jndi.session.name";
-
+   public static final String MAIL_SESSION_JNDI_NAME = "MAIL_SMTP_JNDI_SESSION_NAME";
    
    /**
-    * MAIL_FROM_PASSWORD_PROP = "mail.smtp.from.password"
+    * MAIL_FROM_PASSWORD_PROP = "MAIL_FROM_PASSWORD"
     */
-   public static final String MAIL_FROM_PASSWORD_PROP = "mail.from.password";
+   public static final String MAIL_FROM_PASSWORD_PROP = "MAIL_FROM_PASSWORD";
 
    /**
-    * MAIL_SUBJECT_PROP = "mail.subject"
+    * MAIL_SUBJECT_PROP = "MAIL_SUBJECT"
     */
-   public static final String MAIL_SUBJECT_PROP = "mail.subject";
+   public static final String MAIL_SUBJECT_PROP = "MAIL_SUBJECT";
    
 
    /**
-
     * true then mail user/password required
-
     */
-
-   public static final String MAIL_AUTHENICATION_REQUIRED_PROP = "mail.auth.required";
+   public static final String MAIL_AUTHENICATION_REQUIRED_PROP = "MAIL_AUTH_REQUIRED";
 
    public static final String EMAIL_DELIMITER_IND = ";";
 
-   public static final String MAIL_SERVER_PROP = "mail.host";
+   public static final String MAIL_SERVER_PROP = "MAIL_HOST";
 
    /**
-    * MAIL_FROM_ADDRESS_PROP = "mail.from"
+    * MAIL_FROM_ADDRESS_PROP = "MAIL_FROM"
     */
-   public static final String MAIL_FROM_ADDRESS_PROP = "mail.from";
+   public static final String MAIL_FROM_ADDRESS_PROP = "MAIL_FROM";
   
-   
-
-   public static final String  TEMPLATE_DIR_PROP = "template.dir";
+   public static final String  TEMPLATE_DIR_PROP = "TEMPLATE_DIR";
 
     public static final String TEMPLATE_NAME = "tmp_nm";
 
     public static final String EMAIL_US_TEMPLATE = "email_us";
-
-    
-
-    
 
     public static final String TO = "to";
 
@@ -58,9 +48,9 @@ public interface EmailTags
 
     public static final String BODY = "BODY";
 
-    public static final String FROM_EMAIL = "mail.from";
+    public static final String FROM_EMAIL = "MAIL_FROM";
 
-    public static final String FROM_NAME = "mail.from";
+    public static final String FROM_NAME = "MAIL_FROM";
 
     public static final String FILE_LIST = "FILE_LIST";
 
