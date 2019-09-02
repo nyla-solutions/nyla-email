@@ -6,10 +6,13 @@ import org.junit.Test;
 
 import nyla.solutions.core.util.Config;
 
-//@Ignore
+@Ignore
 public class EmailTest
 {
-
+	/**
+	 * Test for the authentications of the email information
+	 * @throws Exception
+	 */
 	@SuppressWarnings("resource")
 	@Test
 	public void testIsAuthenicationRequired()
@@ -33,7 +36,7 @@ public class EmailTest
 		email = new Email();
 		
 		Assert.assertTrue(!email.isAuthenicationRequired());
-	}
+	}//------------------------------------------------
 	
 	@SuppressWarnings("resource")
 	@Test
